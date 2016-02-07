@@ -22,8 +22,8 @@ function Tracker(elements){
 	this.selectionTotals = {};
 	this.elements = elements;
 
-	for(var i = 0; i < imageElements.length; i++){
-	imageElements[i].addEventListener('click', 
+	for(var i = 0; i < this.elements.length; i++){
+	this.elements[i].addEventListener('click', 
 		function(event){
 			var imagePath = event.target.src;
 			var imageFile = imagePath.substr(imagePath.lastIndexOf('/') + 1);
