@@ -1,29 +1,14 @@
 'use strict';
 
 var imagePath = 'img/';
-var images = [
-	'bag.jpg',
-	'banana.jpg',
-	'chair.jpg',
-	'cthulhu.jpg',
-	'dragon.jpg',
-	'pen.jpg',
-	'scissors.jpg',
-	'shark.jpg',
-	'sweep.jpg',
-  'unicorn.jpg',
-  'usb.jpg',
-  'watercan.jpg',
-  'wineglass.jpg',
-];
-
+var images = ['bag.jpg','banana.jpg','chair.jpg','cthulhu.jpg','dragon.jpg','pen.jpg','scissors.jpg','shark.jpg','sweep.jpg','unicorn.jpg','usb.jpg','watercan.jpg','wineglass.jpg'];
 
 function Tracker(elements){
 	this.selectionTotals = {};
 	this.elements = elements;
 
 	for(var i = 0; i < this.elements.length; i++){
-	this.elements[i].addEventListener('click', 
+	this.elements[i].addEventListener('click',
 		function(event){
 			var imagePath = event.target.src;
 			var imageFile = imagePath.substr(imagePath.lastIndexOf('/') + 1);
@@ -75,7 +60,24 @@ Tracker.prototype.setImages = function(){
 	}
 }
 
-//initial setup
 var imageElements = document.querySelectorAll('.vote');
 var imageTracker = new Tracker(imageElements);
 imageTracker.setImages();
+
+var data = {
+	labels: ["bag", "banana", "boots", "chair", "cthulhu", "dragon", "pen", "scissors", "shark", "sweep", "unicorn", "usb", "watercan", "wineglass"],
+	datasets: [
+		{
+			label: "My First dataset",
+			fillColor: "rgba(220,220,220,0.2)",
+			strokeColor: "rgba(220,220,220,1)",
+			pointColor: "rgba(220,220,220,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: [65, 59, 80, 81, 56, 55, 4]
+		},
+	]
+};
+var results = document.getElementById("myChart").getContext("2d");
+var myNewChart = new Chart(results).Bar(data);
