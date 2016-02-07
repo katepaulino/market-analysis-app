@@ -5,7 +5,7 @@ var images = [
 	'bag.jpg',
 	'banana.jpg',
 	'chair.jpg',
-	'cthulu.jpg',
+	'cthulhu.jpg',
 	'dragon.jpg',
 	'pen.jpg',
 	'scissors.jpg',
@@ -17,32 +17,36 @@ var images = [
   'wineglass.jpg',
 ];
 
-var imageElements = document.querySelectorAll('.vote');
-for(var i = 0; i < imageElements.length; i++){
-	imageElements[i].addEventListener('click', function(){
-		console.log(addSelection(this.src));
-		setImages(imageElements);
-	});
+
+function Tracker(elements){
+	this.selectionTotals = {};
+	this.elements = elements;
+
+	for(var i = 0; i < this.elements.length; i++){
+	this.elements[i].addEventListener('click', 
+		function(event){
+			var imagePath = event.target.src;
+			var imageFile = imagePath.substr(imagePath.lastIndexOf('/') + 1);
+			this.addSelection(imageFile);
+			this.setImages();
+		}.bind(this));
+	}
 }
 
-var addSelection = (function(){
-	var selectionCounts = {};
-
-	return function addSelection(key){
-		if(selectionCounts[key]){
-			selectionCounts[key]++;
-		} else {
-			selectionCounts[key]=1;
-		}
-		return selectionCounts;
+Tracker.prototype.addSelection = function(key){
+	if(this.selectionTotals[key]){
+		this.selectionTotals[key]++;
+	} else {
+		this.selectionTotals[key]=1;
 	}
-}());
+	return this.selectionTotals;
+}
 
-function getRandomIndex(array){
+Tracker.prototype.getRandomIndex = function(array){
 	return Math.floor(Math.random() * array.length);
 }
 
-function getRandomElements(num, array){
+Tracker.prototype.getRandomElements = function(num, array){
 	var randomElements = [];
 	var validIndices = [];
 	var randomIndex;
@@ -53,7 +57,7 @@ function getRandomElements(num, array){
 	}
 
 	while(num > 0){
-		randomIndex = getRandomIndex(validIndices);
+		randomIndex = this.getRandomIndex(validIndices);
 		randomElement = array[validIndices[randomIndex]];
 		randomElements.push(randomElement);
 		validIndices.splice(randomIndex, 1);
@@ -63,13 +67,15 @@ function getRandomElements(num, array){
 	return randomElements;
 }
 
-function setImages(elements){
-	var randomImages = getRandomElements(elements.length, images);
+Tracker.prototype.setImages = function(){
+	var randomImages = this.getRandomElements(this.elements.length, images);
 
-	for(var i = 0; i < elements.length; i++){
-		elements[i].setAttribute('src', imagePath + randomImages[i]);
+	for(var i = 0; i < this.elements.length; i++){
+		this.elements[i].setAttribute('src', imagePath + randomImages[i]);
 	}
 }
 
 //initial setup
-setImages(imageElements);
+var imageElements = document.querySelectorAll('.vote');
+var imageTracker = new Tracker(imageElements);
+imageTracker.setImages();
