@@ -3,9 +3,52 @@
 var imagePath = 'img/';
 var images = ['bag.jpg','banana.jpg','chair.jpg','cthulhu.jpg','dragon.jpg','pen.jpg','scissors.jpg','shark.jpg','sweep.jpg','unicorn.jpg','usb.jpg','watercan.jpg','wineglass.jpg'];
 
-function Tracker(elements){
+var data = {
+	labels: images,
+	datasets: [
+		{
+			label: "My First dataset",
+			fillColor: "rgba(220,220,220,0.2)",
+			strokeColor: "rgba(220,220,220,1)",
+			pointColor: "rgba(220,220,220,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: [65, 59, 80, 81, 56, 55, 4]
+		},
+	]
+};
+
+var formEl = document.getElementById('resultsButton');
+var chart = document.getElementById('myChart');
+var ctx = chart.getContext('2d');
+var myChart = new Chart(ctx).Bar(data);
+
+formEl.addEventListener('submit', function(event) {
+  event.preventDefault();
+  chart.classList.remove('hide');
+  //TODO: You'll need to figure out how to update the values in the chart. Check the chartjs docs
+  // http://www.chartjs.org/docs/#bar-chart-data-structure
+  console.log(imageTracker.getFormattedData());
+  myChart.update();
+});
+
+function Tracker(selectionElements, selectionOptions){
 	this.selectionTotals = {};
-	this.elements = elements;
+	// 1. Check to see if selectionOptions is an array
+	// 2. If so, iterate through that array and create
+	// a key.
+	// This ensures that an index exists in the object
+	if(Array.isArray(selectionOptions)){
+		selectionOptions.forEach(function(selection){
+			this.selectionTotals[selection] = 0;
+			// notice the use of bind here. Without using bind
+			// "this" is undefined
+		}.bind(this));
+	}
+	this.elements = selectionElements;
+	//the counter should live within the constructor
+	this.count = 0;
 
 	for(var i = 0; i < this.elements.length; i++){
 	this.elements[i].addEventListener('click',
@@ -14,14 +57,15 @@ function Tracker(elements){
 			var imageFile = imagePath.substr(imagePath.lastIndexOf('/') + 1);
 			this.addSelection(imageFile);
 			this.setImages();
-		}.bind(this));
-			var voteCounter
-			if (this.roundNumber < 15) {
-				this.getRandomElements();
-				this.roundNumber += 1;
-			} else {
-				console.log("survey over");
+
+			//++this.count increments the variable and returns the result.
+			// the modulo (%) operator returns the remainder of a division operation.
+			// Therefore, if the remainder is 0, the number is evenly divisible by 15. 
+			if(++this.count % 15 == 0){
+				formEl.classList.remove('hide');
 			}
+
+		}.bind(this))
 	}
 }
 
@@ -66,30 +110,34 @@ Tracker.prototype.setImages = function(){
 	}
 }
 
+Tracker.prototype.getFormattedData = function(){
+	// the goal is to return the data in an array
+	var totals = [];
+	//we need to iterate through the object using a for-in loop, 
+	// stuffing the entries into an array 
+	for(var selection in this.selectionTotals){
+		totals.push([selection, this.selectionTotals[selection]]);
+	}
+	// since an object is unordered, there's no guarantee that the
+	// items in our new array are in order. We need to sort the array
+	// look here for more info: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+	totals.sort(function(a, b){
+		//this will alphabetically sort based on the first entry in the array
+		return a[0] - b[0];
+	});
+	//now our array has extra information, so it's just a matter of using
+	// Array.map() to reformat it. Map steps through an array, applies an 
+	// operation to each entry and returns a new array. In this way we're able 
+	// to return an array with just the data we want
+	return totals.map(function(selection){
+		return selection[1];
+	});
+}
+
 var imageElements = document.querySelectorAll('.vote');
-var imageTracker = new Tracker(imageElements);
+var imageTracker = new Tracker(imageElements, images);
 imageTracker.setImages();
 
-var data = {
-	labels: ["bag", "banana", "boots", "chair", "cthulhu", "dragon", "pen", "scissors", "shark", "sweep", "unicorn", "usb", "watercan", "wineglass"],
-	datasets: [
-		{
-			label: "My First dataset",
-			fillColor: "rgba(220,220,220,0.2)",
-			strokeColor: "rgba(220,220,220,1)",
-			pointColor: "rgba(220,220,220,1)",
-			pointStrokeColor: "#fff",
-			pointHighlightFill: "#fff",
-			pointHighlightStroke: "rgba(220,220,220,1)",
-			data: [65, 59, 80, 81, 56, 55, 4]
-		},
-	]
-};
 
-var formEl = document.getElementById('resultsButton');
-formEl.addEventListener('submit', function(event) {
-  event.preventDefault();
-});
 
-var results = document.getElementById("myChart").getContext("2d");
-var myNewChart = new Chart(results).Bar(data);
+
