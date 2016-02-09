@@ -2,7 +2,7 @@ body {
   background-color: #FFFFFF;
   font-family: 'Oxygen', Verdana, sans-serif;
   color: #009966;
-  margin: 0;
+  margin: 50px;
   padding: 0;
   font-size: 16px;
 }
@@ -28,6 +28,6 @@ body {
 }
 
 img {
-  height: 350px;
-  width: 250px;
+  height: 300px;
+  width: 100px;
 }

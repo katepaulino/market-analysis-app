@@ -8,16 +8,23 @@
     <link href="css/style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <h1 align="center">Click on your favorite!</h1>
+    <h1 align="center">Hello! For each set of images, please choose your favorite:</h1>
     <div id="container">
     	<div class="top-bar clearfix">
     		<img src="" class="vote">
     		<img src="" class="vote">
     		<img src="" class="vote">
     	</div>
-    	<div id="barGraph>"<canvas id="myChart">
-        <canvas width="800" height="500" id="myChart"></canvas>
-      </div>
+
+      <p><form id="resultsButton">
+        <button type="submit" id="submit">view results</button>
+        </form>
+      </p>
+
+      <p><div id="barGraph" align="center"><canvas id="myChart">
+        <canvas width="900" height="600" id="myChart"></canvas>
+        </div>
+      </p>
     </div>
       <script src="js/Chart.js"></script>
       <script src="js/app.js"></script>

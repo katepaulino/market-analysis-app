@@ -15,6 +15,13 @@ function Tracker(elements){
 			this.addSelection(imageFile);
 			this.setImages();
 		}.bind(this));
+			var voteCounter
+			if (this.roundNumber < 15) {
+				this.getRandomElements();
+				this.roundNumber += 1;
+			} else {
+				console.log("survey over");
+			}
 	}
 }
 
@@ -48,7 +55,6 @@ Tracker.prototype.getRandomElements = function(num, array){
 		validIndices.splice(randomIndex, 1);
 		num--;
 	}
-
 	return randomElements;
 }
 
@@ -79,5 +85,11 @@ var data = {
 		},
 	]
 };
+
+var formEl = document.getElementById('resultsButton');
+formEl.addEventListener('submit', function(event) {
+  event.preventDefault();
+});
+
 var results = document.getElementById("myChart").getContext("2d");
 var myNewChart = new Chart(results).Bar(data);
