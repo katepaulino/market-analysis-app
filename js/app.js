@@ -28,12 +28,12 @@ controls.addEventListener('click', function(event) {
   event.preventDefault();
 	if (event.target.value === 'reset') {
 		imageTracker.count = 0;
-		//hide chart
+		//TODO: Hide chart, view results and reset button
 	} else if (event.target.value === 'show') {
 		chart.classList.remove('hide');
-		//TODO: Update the values in the chart.
+		//TODO: update chart
 		console.log(imageTracker.getFormattedData());
-		myChart.update();
+	  myChart.update();
 	}
 });
 
