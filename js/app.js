@@ -3,18 +3,63 @@
 var imagePath = 'img/';
 var images = ['bag.jpg','banana.jpg','chair.jpg','cthulhu.jpg','dragon.jpg','pen.jpg','scissors.jpg','shark.jpg','sweep.jpg','unicorn.jpg','usb.jpg','watercan.jpg','wineglass.jpg'];
 
-function Tracker(elements){
+var data = {
+	labels: images,
+	datasets: [
+		{
+			label: "My First dataset",
+			fillColor: "rgba(220,220,220,0.2)",
+			strokeColor: "rgba(220,220,220,1)",
+			pointColor: "rgba(220,220,220,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: [],
+		},
+	]
+};
+
+var controls = document.getElementById('results');
+var chart = document.getElementById('myChart');
+var ctx = chart.getContext('2d');
+var myChart = new Chart(ctx).Bar(data);
+
+controls.addEventListener('click', function(event) {
+  event.preventDefault();
+	if (event.target.value === 'reset') {
+		imageTracker.count = 0;
+		//TODO: Hide chart, view results and reset button
+	} else if (event.target.value === 'show') {
+		chart.classList.remove('hide');
+		//TODO: update chart
+		console.log(imageTracker.getFormattedData());
+	  myChart.update();
+	}
+});
+
+function Tracker(selectionElements, selectionOptions){
 	this.selectionTotals = {};
-	this.elements = elements;
+	if(Array.isArray(selectionOptions)){
+		selectionOptions.forEach(function(selection){
+			this.selectionTotals[selection] = 0;
+		}.bind(this));
+	}
+	this.elements = selectionElements;
+	this.count = 0;
 
 	for(var i = 0; i < this.elements.length; i++){
 	this.elements[i].addEventListener('click',
 		function(event){
-			var imagePath = event.target.src;
-			var imageFile = imagePath.substr(imagePath.lastIndexOf('/') + 1);
-			this.addSelection(imageFile);
-			this.setImages();
-		}.bind(this));
+			if (this.count < 15) {
+				var imagePath = event.target.src;
+				var imageFile = imagePath.substr(imagePath.lastIndexOf('/') + 1);
+				this.addSelection(imageFile);
+				this.setImages();
+				this.count++;
+			} else {
+				controls.classList.remove('hide');
+			}
+		}.bind(this))
 	}
 }
 
@@ -48,7 +93,6 @@ Tracker.prototype.getRandomElements = function(num, array){
 		validIndices.splice(randomIndex, 1);
 		num--;
 	}
-
 	return randomElements;
 }
 
@@ -60,24 +104,19 @@ Tracker.prototype.setImages = function(){
 	}
 }
 
-var imageElements = document.querySelectorAll('.vote');
-var imageTracker = new Tracker(imageElements);
-imageTracker.setImages();
+Tracker.prototype.getFormattedData = function(){
+	var totals = [];
+	for(var selection in this.selectionTotals){
+		totals.push([selection, this.selectionTotals[selection]]);
+	}
+	totals.sort(function(a, b){
+		return a[0] - b[0];
+	});
+	return totals.map(function(selection){
+		return selection[1];
+	});
+}
 
-var data = {
-	labels: ["bag", "banana", "boots", "chair", "cthulhu", "dragon", "pen", "scissors", "shark", "sweep", "unicorn", "usb", "watercan", "wineglass"],
-	datasets: [
-		{
-			label: "My First dataset",
-			fillColor: "rgba(220,220,220,0.2)",
-			strokeColor: "rgba(220,220,220,1)",
-			pointColor: "rgba(220,220,220,1)",
-			pointStrokeColor: "#fff",
-			pointHighlightFill: "#fff",
-			pointHighlightStroke: "rgba(220,220,220,1)",
-			data: [65, 59, 80, 81, 56, 55, 4]
-		},
-	]
-};
-var results = document.getElementById("myChart").getContext("2d");
-var myNewChart = new Chart(results).Bar(data);
+var imageElements = document.querySelectorAll('.vote');
+var imageTracker = new Tracker(imageElements, images);
+imageTracker.setImages();
