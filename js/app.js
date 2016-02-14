@@ -14,7 +14,7 @@ var data = {
 			pointStrokeColor: "#fff",
 			pointHighlightFill: "#fff",
 			pointHighlightStroke: "rgba(220,220,220,1)",
-			data: [],
+			data: []
 		},
 	]
 };
@@ -28,12 +28,13 @@ controls.addEventListener('click', function(event) {
   event.preventDefault();
 	if (event.target.value === 'reset') {
 		imageTracker.count = 0;
-		//TODO: Hide chart, view results and reset button
+		controls.classList.toggle('hide');
+		barGraph.classList.toggle('hide');
 	} else if (event.target.value === 'show') {
 		chart.classList.remove('hide');
-		//TODO: update chart
+		data.datasets[0].data.push(imageTracker.getFormattedData());
 		console.log(imageTracker.getFormattedData());
-	  myChart.update();
+		myChart.update();
 	}
 });
 
