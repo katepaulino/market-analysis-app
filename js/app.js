@@ -14,7 +14,9 @@ var data = {
 			pointStrokeColor: "#fff",
 			pointHighlightFill: "#fff",
 			pointHighlightStroke: "rgba(220,220,220,1)",
-			data: []
+			// the bar graph seems to need to be set up with
+			// the right number of elements.
+			data: images
 		},
 	]
 };
@@ -32,8 +34,12 @@ controls.addEventListener('click', function(event) {
 		barGraph.classList.toggle('hide');
 	} else if (event.target.value === 'show') {
 		chart.classList.remove('hide');
-		data.datasets[0].data.push(imageTracker.getFormattedData());
-		console.log(imageTracker.getFormattedData());
+		//
+		for(var i = 0, data = imageTracker.getFormattedData(); i < data.length; i++){
+			myChart.datasets[0].bars[i].value = data[i];
+		}
+		// doesn't work! can't replace whole data set
+		//myChart.datasets[0].bars = imageTracker.getFormattedData();
 		myChart.update();
 	}
 });
