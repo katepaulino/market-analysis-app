@@ -33,6 +33,8 @@ controls.addEventListener('click', function(event) {
 	} else if (event.target.value === 'show') {
 		barGraph.classList.remove('hide')
 		chart.classList.remove('hide');
+		thankyou.classList.remove('hide');
+
 
 		for (var i = 0, data = imageTracker.getFormattedData(); i < data.length; i++){
 			myChart.datasets[0].bars[i].value = data[i];
