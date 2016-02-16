@@ -14,8 +14,6 @@ var data = {
 			pointStrokeColor: "#fff",
 			pointHighlightFill: "#fff",
 			pointHighlightStroke: "rgba(220,220,220,1)",
-			// the bar graph seems to need to be set up with
-			// the right number of elements.
 			data: images
 		},
 	]
@@ -36,11 +34,9 @@ controls.addEventListener('click', function(event) {
 		barGraph.classList.remove('hide')
 		chart.classList.remove('hide');
 
-		for(var i = 0, data = imageTracker.getFormattedData(); i < data.length; i++){
+		for (var i = 0, data = imageTracker.getFormattedData(); i < data.length; i++){
 			myChart.datasets[0].bars[i].value = data[i];
 		}
-		// doesn't work! can't replace whole data set
-		//myChart.datasets[0].bars = imageTracker.getFormattedData();
 		myChart.update();
 	}
 });
