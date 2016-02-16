@@ -30,11 +30,12 @@ controls.addEventListener('click', function(event) {
   event.preventDefault();
 	if (event.target.value === 'reset') {
 		imageTracker.count = 0;
-		controls.classList.toggle('hide');
-		barGraph.classList.toggle('hide');
+		controls.classList.add('hide');
+		barGraph.classList.add('hide');
 	} else if (event.target.value === 'show') {
+		barGraph.classList.remove('hide')
 		chart.classList.remove('hide');
-		//
+
 		for(var i = 0, data = imageTracker.getFormattedData(); i < data.length; i++){
 			myChart.datasets[0].bars[i].value = data[i];
 		}
