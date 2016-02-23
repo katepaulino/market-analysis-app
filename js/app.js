@@ -30,6 +30,7 @@ controls.addEventListener('click', function(event) {
 		imageTracker.count = 0;
 		controls.classList.add('hide');
 		barGraph.classList.add('hide');
+		thankyou.classList.add('hide');
 	} else if (event.target.value === 'show') {
 		barGraph.classList.remove('hide')
 		chart.classList.remove('hide');
@@ -40,6 +41,11 @@ controls.addEventListener('click', function(event) {
 			myChart.datasets[0].bars[i].value = data[i];
 		}
 		myChart.update();
+		
+		// local storage
+		var storageTotals = imageTracker.getFormattedData();
+		localStorage.setItem('storageTotals', JSON.stringify(storageTotals));
+		console.log('storage totals: ' + storageTotals);
 	}
 });
 
